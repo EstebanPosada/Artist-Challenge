@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 object SearchScreen
 
 @Serializable
-object DetailArtistScreen
+data class DetailArtistScreen(val artistId: String)
 
 @Serializable
-object AlbumScreen
+data class AlbumScreen(val artistId: String)

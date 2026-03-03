@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Artis Challenge</string>
+    <string name="app_name">Artist Challenge</string>
+    <string name="type_artist">Search Artist</string>
+    <string name="type_search">Search</string>
 </resources>
