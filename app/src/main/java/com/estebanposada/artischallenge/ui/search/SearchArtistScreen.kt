@@ -106,7 +106,11 @@ private fun SearchArtist(
 @Preview
 @Composable
 private fun SearchArtistPreview() {
-    val artist = Artist(id = "id", name = "name", thumbnail = "url", title = "title")
+    val artist = Artist(
+        id = "id", name = "name",
+        profile = "profile",
+        members = emptyList(),
+    )
     val state = SearchArtistState(artists = listOf(artist, artist))
     ArtisChallengeTheme {
         SearchArtist(state, {}, {}) {}

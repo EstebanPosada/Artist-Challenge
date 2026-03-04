@@ -1,7 +1,12 @@
 package com.estebanposada.artischallenge.ui.albums
 
-sealed class AlbumListState {
-    object Loading : AlbumListState()
-    data class Success(val artist: String) : AlbumListState()
-    object Error : AlbumListState()
-}
+import com.estebanposada.domain.model.Album
+
+data class AlbumListState(
+    val id: String = "",
+    val albums: List<Album> = emptyList(),
+    val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = true,
+    val error: String? = null
+)

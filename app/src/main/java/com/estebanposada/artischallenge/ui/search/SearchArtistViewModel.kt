@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchArtistViewModel @Inject constructor(private val searchArtistsUseCase: SearchArtistsUseCase) :
     ViewModel() {
-    private val _state = mutableStateOf<SearchArtistState>(SearchArtistState())
+    private val _state = mutableStateOf(SearchArtistState())
     val state: State<SearchArtistState> = _state
     private val _event = MutableSharedFlow<SearchArtistEvent>()
     val event = _event.asSharedFlow()
@@ -73,6 +73,7 @@ class SearchArtistViewModel @Inject constructor(private val searchArtistsUseCase
 
                 is Resource.Error -> {
                     _state.value = currentState.copy(
+                        isLoadingMore = false,
                         isLoading = false,
                         error = result.cause?.message ?: "Unknown error"
                     )

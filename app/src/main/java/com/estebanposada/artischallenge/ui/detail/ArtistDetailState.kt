@@ -1,9 +1,10 @@
 package com.estebanposada.artischallenge.ui.detail
 
-import com.estebanposada.domain.model.ArtistDetail
+import com.estebanposada.domain.model.Artist
 
-sealed class ArtistDetailState {
-    object Loading : ArtistDetailState()
-    data class Success(val artist: ArtistDetail) : ArtistDetailState()
-    object Error : ArtistDetailState()
-}
+data class ArtistDetailState(
+    val id: String = "",
+    val artist: Artist? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)

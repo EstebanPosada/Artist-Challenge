@@ -1,7 +1,9 @@
 package com.estebanposada.artischallenge.di
 
 import com.estebanposada.domain.repository.ArtistRepository
-import com.estebanposada.domain.usecase.GetArtistByIdUseCase
+import com.estebanposada.domain.usecase.GetAlbumInfoUseCase
+import com.estebanposada.domain.usecase.GetArtistDetailUseCase
+import com.estebanposada.domain.usecase.SearchAlbumUseCase
 import com.estebanposada.domain.usecase.SearchArtistsUseCase
 import dagger.Module
 import dagger.Provides
@@ -15,5 +17,12 @@ object UseCaseModule {
     fun provideSearchArtistUseCase(repository: ArtistRepository) = SearchArtistsUseCase(repository)
 
     @Provides
-    fun provideGetArtistUseCase(repository: ArtistRepository) = GetArtistByIdUseCase(repository)
+    fun provideGetAlbumByArtistIdUseCase(repository: ArtistRepository) =
+        GetArtistDetailUseCase(repository)
+
+    @Provides
+    fun provideSearchAlbumUseCase(repository: ArtistRepository) = SearchAlbumUseCase(repository)
+
+    @Provides
+    fun provideGetAlbumInfoUseCase(repository: ArtistRepository) = GetAlbumInfoUseCase(repository)
 }

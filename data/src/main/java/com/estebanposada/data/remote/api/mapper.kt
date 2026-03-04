@@ -1,19 +1,25 @@
 package com.estebanposada.data.remote.api
 
+import com.estebanposada.domain.model.Album
 import com.estebanposada.domain.model.Artist
-import com.estebanposada.domain.model.ArtistDetail
 
 fun ArtistDto.toArtist() = Artist(
     id = id.toString(),
     name = title,
-    thumbnail = thumb?.takeIf { it.isNotBlank() }?:cover_image,
-    title = title
+    thumbnail = thumb?.takeIf { it.isNotBlank() } ?: cover_image,
+    members = emptyList(),
 )
 
-fun ArtistResponse.toArtistDetail() = ArtistDetail(
+fun ArtistResponse.toArtistDetail() = Artist(
     id = id.toString(),
     name = name,
+    thumbnail = images?.firstOrNull()?.uri,
     profile = profile.orEmpty(),
-    imageUrl = images?.firstOrNull()?.uri,
-    members = members?.map {it.name },
+    members = members?.map { it.name },
+)
+
+fun ReleaseDto.toAlbum() = Album(
+    id = id.toString(),
+    title = title,
+    year = year ?: 0
 )

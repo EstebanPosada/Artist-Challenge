@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.estebanposada.artischallenge.ui.albums.AlbumListScreen
 import com.estebanposada.artischallenge.ui.detail.ArtistDetailScreen
 import com.estebanposada.artischallenge.ui.search.SearchArtistScreen
@@ -29,12 +30,13 @@ class MainActivity : ComponentActivity() {
                         SearchArtistScreen { navController.navigate(DetailArtistScreen(it)) }
                     }
                     composable<DetailArtistScreen> {
+                        val arg = it.toRoute<AlbumScreen>()
                         ArtistDetailScreen(
-                            onClick = { navController.navigate(AlbumScreen(it)) },
+                            onViewAlbums = { navController.navigate(AlbumScreen(arg.artistId)) },
                             onBack = { navController.popBackStack() })
                     }
                     composable<AlbumScreen> {
-                        AlbumListScreen()
+                        AlbumListScreen(onBack = { navController.popBackStack() })
                     }
                 }
             }

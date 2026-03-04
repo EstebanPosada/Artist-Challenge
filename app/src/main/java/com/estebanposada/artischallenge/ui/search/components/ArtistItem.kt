@@ -77,6 +77,9 @@ fun ArtistItem(artist: Artist, onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun ArtistItemPreview() {
-    val artist = Artist(id = "id", name = "name", thumbnail = "url", title = "title")
+    val artist = Artist(
+        id = "id", name = "name", thumbnail = "url",
+        members = emptyList()
+    )
     ArtistItem(artist) {}
 }

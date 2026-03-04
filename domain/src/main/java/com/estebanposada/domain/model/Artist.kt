@@ -3,7 +3,7 @@ package com.estebanposada.domain.model
 data class Artist(
     val id: String,
     val name: String,
-    val title: String,
+    val profile: String? = null,
     val thumbnail: String? = null,
-    val year: String? = null
+    val members: List<String>? = null
 )
