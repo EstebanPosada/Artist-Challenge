@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "Artis Challenge"
 include(":app")
 include(":domain")
+include(":data")

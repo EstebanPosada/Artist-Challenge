@@ -1,6 +1,6 @@
 package com.estebanposada.artischallenge.di
 
-import com.estebanposada.artischallenge.repository.ArtistRepositoryImpl
+import com.estebanposada.data.repository.ArtistRepositoryImpl
 import com.estebanposada.domain.repository.ArtistRepository
 import dagger.Binds
 import dagger.Module

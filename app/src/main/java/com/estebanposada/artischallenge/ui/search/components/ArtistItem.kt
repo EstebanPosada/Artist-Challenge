@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -21,11 +20,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.placeholder
 import com.estebanposada.artischallenge.R
 import com.estebanposada.domain.model.Artist
 
@@ -33,23 +36,28 @@ import com.estebanposada.domain.model.Artist
 fun ArtistItem(artist: Artist, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min),
         onClick = { onClick(artist.id) },
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .height(IntrinsicSize.Min),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(artist.thumbnail).crossfade(true)
+                    .placeholder(R.drawable.artist_placeholder)
+                    .error(R.drawable.artist_error).build()
+            )
             Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
+                painter = painter,
                 contentScale = ContentScale.Fit,
                 contentDescription = "Artist: ${artist.id}",
                 modifier = Modifier
+                    .width(60.dp)
                     .aspectRatio(3 / 4f)
-                    .clip(RoundedCornerShape(8.dp))
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
@@ -69,6 +77,6 @@ fun ArtistItem(artist: Artist, onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun ArtistItemPreview() {
-    val artist = Artist(id = "id", name = "name", thumbnail = "url")
+    val artist = Artist(id = "id", name = "name", thumbnail = "url", title = "title")
     ArtistItem(artist) {}
 }

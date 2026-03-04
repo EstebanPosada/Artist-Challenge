@@ -19,9 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.estebanposada.artischallenge.R
 
 @Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit, onSearch: () -> Unit) {
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {

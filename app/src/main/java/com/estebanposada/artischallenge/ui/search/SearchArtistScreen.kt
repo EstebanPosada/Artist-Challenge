@@ -2,17 +2,18 @@ package com.estebanposada.artischallenge.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,45 +30,74 @@ fun SearchArtistScreen(
     onItemClick: (String) -> Unit
 ) {
     val state = viewModel.state.value
-    SearchArtist(state) { onItemClick(it) }
+    LaunchedEffect(Unit) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is SearchArtistEvent.ItemClicked -> onItemClick(event.id)
+            }
+        }
+    }
+    SearchArtist(
+        state, onItemClick = { viewModel.onItemClick(it) },
+        onQueryChange = { viewModel.onSearch(it) },
+        onLoadNextPage = { viewModel.onLoadNextPage() })
 }
 
 @Composable
-private fun SearchArtist(state: SearchArtistState, onItemClick: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        SearchBar(
-            query = "",
-            onQueryChange = { },
-            onSearch = {}
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+private fun SearchArtist(
+    state: SearchArtistState,
+    onItemClick: (String) -> Unit,
+    onQueryChange: (String) -> Unit,
+    onLoadNextPage: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            SearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(8.dp),
+                query = state.query,
+                onQueryChange = { onQueryChange(it) },
+                onSearch = {}
+            )
+        }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxSize(), contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(8.dp)
         ) {
-            when (state) {
-                is SearchArtistState.Loading -> CircularProgressIndicator()
-                is SearchArtistState.Success ->
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.artists) { artist ->
-                            ArtistItem(artist) { onItemClick(it) }
-                        }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(state.artists) { i, artist ->
+                    ArtistItem(artist) { onItemClick(it) }
+                    if (i >= state.artists.size - 3 && state.canLoadMore && !state.isLoadingMore) {
+                        onLoadNextPage()
                     }
-
-                is SearchArtistState.Error -> Text(
-                    "Something went wrong",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.error
-                )
+                }
+            }
+            if (state.isLoading)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            state.error?.let {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "Something went wrong",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }
@@ -76,36 +106,36 @@ private fun SearchArtist(state: SearchArtistState, onItemClick: (String) -> Unit
 @Preview
 @Composable
 private fun SearchArtistPreview() {
-    val artist = Artist(id = "id", name = "name", thumbnail = "url")
-    val state = SearchArtistState.Success(listOf(artist, artist))
+    val artist = Artist(id = "id", name = "name", thumbnail = "url", title = "title")
+    val state = SearchArtistState(artists = listOf(artist, artist))
     ArtisChallengeTheme {
-        SearchArtist(state) {}
+        SearchArtist(state, {}, {}) {}
     }
 }
 
 @Preview
 @Composable
 private fun SearchArtistPreviewEmpty() {
-    val state = SearchArtistState.Success(listOf())
+    val state = SearchArtistState(artists = emptyList())
     ArtisChallengeTheme {
-        SearchArtist(state) {}
+        SearchArtist(state, {}, {}) {}
     }
 }
 
 @Preview
 @Composable
 private fun SearchArtistPreviewLoading() {
-    val state = SearchArtistState.Loading
+    val state = SearchArtistState(isLoading = true)
     ArtisChallengeTheme {
-        SearchArtist(state) {}
+        SearchArtist(state, {}, {}) {}
     }
 }
 
 @Preview
 @Composable
 private fun SearchArtistPreviewError() {
-    val state = SearchArtistState.Error
+    val state = SearchArtistState(error = "error")
     ArtisChallengeTheme {
-        SearchArtist(state) {}
+        SearchArtist(state, {}, {}) {}
     }
 }
