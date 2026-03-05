@@ -22,13 +22,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"https://api.discogs.com/\"")
+        buildConfigField("String", "DISCOGS_TOKEN", "\"${project.properties["DISCOGS_TOKEN"]}\"")
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "BASE_URL", "\"https://api.discogs.com/\"")
-            buildConfigField("String", "DISCOGS_TOKEN", "\"${project.properties["DISCOGS_TOKEN"]}\"")
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
