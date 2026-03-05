@@ -84,13 +84,14 @@ class AlbumListViewModel @Inject constructor(
             currentPage++
             when (val result = searchAlbumUseCase(currentArtistId, currentPage)) {
                 is Resource.Success -> {
-                    val albums = currentState.albums + result.data
-                    _state.value =
-                        _state.value.copy(
-                            albums = albums.sortedByDescending { it.year ?: 0 },
-                            isLoadingMore = false,
-                            canLoadMore = result.data.isNotEmpty()
-                        )
+                    val albums = _state.value.albums + result.data
+                    val sorted = albums.sortedByDescending { it.year ?: 0 }
+                    _state.value = _state.value.copy(
+                        albums = sorted,
+                        filteredAlbums = sorted,
+                        isLoadingMore = false,
+                        canLoadMore = result.data.isNotEmpty()
+                    )
                 }
 
                 is Resource.Error -> _state.value =

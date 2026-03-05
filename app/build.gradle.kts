@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.coil3.compose)
     implementation(libs.coil3.network.okhttp)
 
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -39,7 +39,7 @@ object NetworkModule {
         discogsInterceptor: DiscogsAuthInterceptor
     ) =
         OkHttpClient.Builder().addInterceptor(interceptor)
-//            .addInterceptor(discogsInterceptor)
+            .addInterceptor(discogsInterceptor)
             .build()
 
 

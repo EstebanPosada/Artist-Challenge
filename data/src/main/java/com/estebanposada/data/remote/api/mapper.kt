@@ -18,7 +18,7 @@ fun ArtistResponse.toArtistDetail() = Artist(
     members = members?.map { it.name },
 )
 fun AlbumResponse.toAlbum() = Album(
-    id = "",
+    id = id,
     title = title,
     year = year,
     genres = genres,
@@ -29,6 +29,6 @@ fun ReleaseDto.toAlbum() = Album(
     id = id.toString(),
     title = title,
     year = year ?: 0,
-//    genres = ,
-//    labels = TODO(),
+    genres = listOf(),
+    labels = listOf(),
 )

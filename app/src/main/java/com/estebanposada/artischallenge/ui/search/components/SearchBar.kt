@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.debounce
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-//    query: String,
     onQueryChange: (String) -> Unit,
 ) {
     var q by remember() { mutableStateOf("") }
@@ -67,7 +66,5 @@ fun SearchBar(
 @Preview
 @Composable
 private fun SearchBarPreview() {
-    SearchBar(
-//        query = "",
-        onQueryChange = {})
+    SearchBar(onQueryChange = {})
 }

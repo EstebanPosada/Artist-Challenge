@@ -128,7 +128,7 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    threshold: 60
+    threshold: 85
   LongParameterList:
     active: true
     functionThreshold: 6
@@ -334,6 +334,8 @@ naming:
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
     functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
+    ignoreAnnotated:
+      - Composable
   FunctionParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*'
@@ -625,6 +627,8 @@ style:
     ignoreEnums: false
     ignoreRanges: false
     ignoreExtensionFunctions: true
+    ignoreAnnotated:
+      - Composable
   MandatoryBracesLoops:
     active: false
   MaxChainedCallsOnSameLine:
@@ -739,6 +743,8 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ''
+    ignoreAnnotated:
+      - Preview
   UnusedPrivateProperty:
     active: true
     allowedNames: '_|ignored|expected|serialVersionUID'

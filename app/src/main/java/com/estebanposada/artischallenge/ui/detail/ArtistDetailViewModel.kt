@@ -38,7 +38,10 @@ class ArtistDetailViewModel @Inject constructor(
                     _state.value.copy(isLoading = false, artist = result.data)
 
                 is Resource.Error -> _state.value =
-                    _state.value.copy(isLoading = false, error = "Unknown error")
+                    _state.value.copy(
+                        isLoading = false,
+                        error = result.cause?.message ?: "Unknown error"
+                    )
             }
         }
     }

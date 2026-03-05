@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.estebanposada.artischallenge.ui.theme
 
 import androidx.compose.ui.graphics.Color

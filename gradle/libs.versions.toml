@@ -19,6 +19,8 @@ loggingInterceptor = "5.0.0-alpha.5"
 coil = "3.3.0"
 appcompat = "1.7.1"
 material = "1.13.0"
+coroutinesTest = "1.8.1"
+mockk = "1.13.10"
 detekt = "1.23.6"
 
 [libraries]
@@ -48,8 +50,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 coil3-compose = {group="io.coil-kt.coil3", name="coil-compose", version.ref="coil"}
 coil3-network-okhttp = {group="io.coil-kt.coil3", name="coil-network-okhttp", version.ref="coil"}
-detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
-#kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
