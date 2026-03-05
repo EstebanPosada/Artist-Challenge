@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.estebanposada.artischallenge.ui.search.components.ArtistItem
+import com.estebanposada.artischallenge.ui.search.components.EmptySearchState
 import com.estebanposada.artischallenge.ui.search.components.SearchBar
 import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Artist
@@ -60,14 +61,35 @@ private fun SearchArtist(
                 .padding(innerPadding)
                 .padding(8.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                itemsIndexed(state.artists) { i, artist ->
-                    ArtistItem(artist) { onItemClick(it) }
-                    if (i >= state.artists.size - 3 && state.canLoadMore && !state.isLoadingMore) {
-                        onLoadNextPage()
+            if (state.artists.isEmpty() && !state.isLoading && state.error == null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    EmptySearchState(modifier = Modifier.fillMaxSize())
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    itemsIndexed(state.artists) { i, artist ->
+                        ArtistItem(artist) { onItemClick(it) }
+                        if (i >= state.artists.size - 3 && state.canLoadMore && !state.isLoadingMore) {
+                            onLoadNextPage()
+                        }
+                    }
+                    if (state.isLoadingMore) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
                 }
             }
