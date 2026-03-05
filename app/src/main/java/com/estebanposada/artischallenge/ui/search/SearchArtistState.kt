@@ -10,7 +10,3 @@ data class SearchArtistState(
     val canLoadMore: Boolean = true,
     val error: String? = null
 )
-
-sealed class SearchArtistEvent {
-    data class ItemClicked(val id: String) : SearchArtistEvent()
-}

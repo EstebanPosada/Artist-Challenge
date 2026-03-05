@@ -17,9 +17,18 @@ fun ArtistResponse.toArtistDetail() = Artist(
     profile = profile.orEmpty(),
     members = members?.map { it.name },
 )
+fun AlbumResponse.toAlbum() = Album(
+    id = "",
+    title = title,
+    year = year,
+    genres = genres,
+    labels = labels.map { it.name }
+)
 
 fun ReleaseDto.toAlbum() = Album(
     id = id.toString(),
     title = title,
-    year = year ?: 0
+    year = year ?: 0,
+//    genres = ,
+//    labels = TODO(),
 )

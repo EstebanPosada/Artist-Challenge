@@ -8,10 +8,7 @@ data class ArtistResponse(
     val members: List<MemberDto>? = null
 )
 
-data class ImageDto(
-    val uri: String,
-    val type: String
-)
+data class ImageDto(val uri: String)
 
 data class MemberDto(
     val id: String,

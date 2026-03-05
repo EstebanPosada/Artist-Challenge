@@ -35,7 +35,7 @@ class ArtistDetailViewModel @Inject constructor(
 
             when (val result = getArtistDetailUseCase(id = id)) {
                 is Resource.Success -> _state.value =
-                    _state.value.copy(artist = result.data)
+                    _state.value.copy(isLoading = false, artist = result.data)
 
                 is Resource.Error -> _state.value =
                     _state.value.copy(isLoading = false, error = "Unknown error")

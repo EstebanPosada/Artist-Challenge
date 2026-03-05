@@ -16,6 +16,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    @Singleton
+    @Provides
+    fun provideDiscogsInterceptor() = DiscogsAuthInterceptor()
+
     @Singleton
     @Provides
     fun provideGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
@@ -29,9 +34,12 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideClient(interceptor: HttpLoggingInterceptor) =
+    fun provideClient(
+        interceptor: HttpLoggingInterceptor,
+        discogsInterceptor: DiscogsAuthInterceptor
+    ) =
         OkHttpClient.Builder().addInterceptor(interceptor)
-//            .addInterceptor(DiscogsAuthInterceptor())
+//            .addInterceptor(discogsInterceptor)
             .build()
 
 

@@ -40,9 +40,9 @@ class ArtistRepositoryImpl @Inject constructor(private val api: ArtistApi) :
         Resource.Error(e)
     }
 
-    override suspend fun getAlbumInfo(id: String): Resource<List<Album>> = try {
+    override suspend fun getAlbumInfo(id: String): Resource<Album> = try {
         val response = api.getAlbumInfo(id)
-        Resource.Success(response.releases.map { it.toAlbum() })
+        Resource.Success(response.toAlbum())
     } catch (e: Exception) {
         Resource.Error(e)
     }

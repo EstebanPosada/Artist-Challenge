@@ -7,8 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.usecase.SearchArtistsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,8 +15,6 @@ class SearchArtistViewModel @Inject constructor(private val searchArtistsUseCase
     ViewModel() {
     private val _state = mutableStateOf(SearchArtistState())
     val state: State<SearchArtistState> = _state
-    private val _event = MutableSharedFlow<SearchArtistEvent>()
-    val event = _event.asSharedFlow()
 
     private var currentPage = 1
 
@@ -80,12 +76,6 @@ class SearchArtistViewModel @Inject constructor(private val searchArtistsUseCase
                     currentPage--
                 }
             }
-        }
-    }
-
-    fun onItemClick(artistId: String) {
-        viewModelScope.launch {
-            _event.emit(SearchArtistEvent.ItemClicked(artistId))
         }
     }
 }

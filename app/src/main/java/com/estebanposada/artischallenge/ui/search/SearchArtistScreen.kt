@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,15 +29,9 @@ fun SearchArtistScreen(
     onItemClick: (String) -> Unit
 ) {
     val state = viewModel.state.value
-    LaunchedEffect(Unit) {
-        viewModel.event.collect { event ->
-            when (event) {
-                is SearchArtistEvent.ItemClicked -> onItemClick(event.id)
-            }
-        }
-    }
     SearchArtist(
-        state, onItemClick = { viewModel.onItemClick(it) },
+        state,
+        onItemClick = onItemClick,
         onQueryChange = { viewModel.onSearch(it) },
         onLoadNextPage = { viewModel.onLoadNextPage() })
 }
@@ -57,9 +50,7 @@ private fun SearchArtist(
                     .fillMaxWidth()
                     .statusBarsPadding()
                     .padding(8.dp),
-                query = state.query,
                 onQueryChange = { onQueryChange(it) },
-                onSearch = {}
             )
         }
     ) { innerPadding ->

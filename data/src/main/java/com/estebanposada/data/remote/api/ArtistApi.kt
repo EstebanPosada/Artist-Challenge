@@ -22,10 +22,9 @@ interface ArtistApi {
     suspend fun getAlbums(
         @Path("artist_id") id: String,
         @Query("page") page: Int,
-        @Query("per_page") limit: Int = 30,
+        @Query("per_page") limit: Int = 60,
     ): AlbumResponse
 
     @GET("/releases/{release_id}")
     suspend fun getAlbumInfo(@Path("release_id") releaseId: String): AlbumResponse
-
 }
