@@ -1,9 +1,8 @@
-# Artist Challenge (Discogs API)
+# Artist Challenge
 
-Android application that allows users to search for artists using the Discogs API, explore artist details, and browse their discography.
+Android application that integrates with the Discogs API to search artists, explore their details, and navigate their discography.
 
-The project was built as part of a mobile engineering challenge and focuses on clean architecture, modern Android development practices, and a responsive UI.
-
+The project focuses on clean architecture, maintainability, and modern Android development practices.
 ---
 
 # Features
@@ -18,10 +17,15 @@ The project was built as part of a mobile engineering challenge and focuses on c
 - Year
 - Genre
 - Label
-
 • Pagination
 • Loading, empty, and error state handling  
-• Modern UI built with Jetpack Compose  
+• Modern UI built with Jetpack Compose
+
+## Screenshots
+
+| Search Screen | Artist Detail | Albums |
+|---------------|---------------|--------|
+| <img width="397" height="886" alt="image" src="https://github.com/user-attachments/assets/07cd9235-f506-46cf-b3b8-85bf960d896c" />|<img width="392" height="881" alt="image" src="https://github.com/user-attachments/assets/6769fa00-ffe2-4ad8-8bd2-f9e0c1eb166c" /> | <img width="393" height="882" alt="image" src="https://github.com/user-attachments/assets/320af13b-cd69-4ba6-b23a-06a6e2089716" /> |
 
 ---
 
@@ -94,12 +98,13 @@ Components:
 
 The application integrates with the **Discogs API**.
 
-Pagination is implemented using the Discogs API parameters: `?page=X ?per_page=30`
+### Pagination
 
+The Discogs API supports pagination with `page` and `per_page` parameters.
 
----
+A custom pagination mechanism was implemented in the ViewModel to load additional data when the user scrolls near the end of the list.
 
-# Pagination Strategy
+Each request retrieves **30 elements per page**, as required by the challenge.
 
 The project implements a **custom pagination strategy**.
 
@@ -191,10 +196,10 @@ Run tests with: `./gradlew test`
 
 The development of the application followed an iterative approach, focusing first on the project structure and UI flow before fully integrating the API.
 
-1. **Project Setup & Architecture**
+1. **Project Initialization**
 
-   The project started with the creation of the package structure following Clean Architecture principles.  
-   The layers for `presentation`, `domain`, and `data` were defined early to ensure a clear separation of responsibilities.
+The project was started by defining the package structure following Clean Architecture principles.  
+Modules for presentation, domain, and data layers were created.
 
 2. **Initial UI & Navigation**
 
@@ -213,7 +218,7 @@ The development of the application followed an iterative approach, focusing firs
 
 4. **API Integration**
 
-   Once the UI structure was in place, the Discogs API was integrated using **Retrofit and OkHttp**.
+   Once the UI structure was in place, the Discogs API was integrated using **Retrofit** & **OkHttp**.
 
    The main features implemented were:
 
@@ -225,7 +230,7 @@ The development of the application followed an iterative approach, focusing firs
 
 5. **Discography & Refactoring**
 
-   While implementing the album list, some responsibilities initially placed in the artist detail screen were moved to a dedicated albums screen.  
+   While implementing the albums screen, some responsibilities initially placed in the artist detail screen were moved to a dedicated albums screen, improving separation of concerns.
    This resulted in a refactor that better aligned the UI with the application flow and improved separation of concerns.
 
 6. **UI Improvements**
@@ -236,10 +241,12 @@ The development of the application followed an iterative approach, focusing firs
    - Empty states
    - Error handling
    - Sorting and filtering of album lists
+   -
+   After the core functionality was working, the models, UI states, and screen logic were refactored to better match the API structure and improve maintainability.
 
 7. **Static Analysis**
 
-   After the main functionality was complete, **Detekt** was added as a static analysis tool to help maintain code quality and enforce Kotlin best practices.  
+   After the main functionality was working, **Detekt** was added as a static analysis tool to help maintain code quality and enforce Kotlin best practices.  
    Some rules were adjusted to better support Jetpack Compose patterns.
 
 8. **Testing**
@@ -262,17 +269,3 @@ The development of the application followed an iterative approach, focusing firs
    - Extraction of secrets and configuration values
 
 The final result is a modular and maintainable codebase that follows modern Android development practices.
-
----
-
-# Future Improvements
-
-Possible enhancements:
-
-• Implement Paging 3 for advanced pagination  
-• Add caching strategy  
-• Improve UI animations and transitions  
-• Add UI tests for Compose screens  
-
----
-
