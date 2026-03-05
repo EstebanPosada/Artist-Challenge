@@ -25,7 +25,7 @@ The project focuses on clean architecture, maintainability, and modern Android d
 
 | Search Screen | Artist Detail | Albums |
 |---------------|---------------|--------|
-| <img width="397" height="886" alt="image" src="https://github.com/user-attachments/assets/07cd9235-f506-46cf-b3b8-85bf960d896c" />|<img width="392" height="881" alt="image" src="https://github.com/user-attachments/assets/6769fa00-ffe2-4ad8-8bd2-f9e0c1eb166c" /> | <img width="393" height="882" alt="image" src="https://github.com/user-attachments/assets/320af13b-cd69-4ba6-b23a-06a6e2089716" /> |
+| <img width="392" height="880" alt="image" src="https://github.com/user-attachments/assets/d944ec9b-3be8-465d-966f-dd7c3f1f45bb" />|<img width="392" height="881" alt="image" src="https://github.com/user-attachments/assets/6769fa00-ffe2-4ad8-8bd2-f9e0c1eb166c" /> | <img width="393" height="882" alt="image" src="https://github.com/user-attachments/assets/320af13b-cd69-4ba6-b23a-06a6e2089716" /> |
 
 ---
 
