@@ -27,13 +27,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.estebanposada.artischallenge.R
 import com.estebanposada.artischallenge.ui.albums.components.AlbumItem
 import com.estebanposada.artischallenge.ui.albums.components.AlbumSortType
 import com.estebanposada.artischallenge.ui.albums.components.SortModalBottomSheet
+import com.estebanposada.artischallenge.ui.common.ErrorState
 import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Album
 
@@ -66,7 +69,7 @@ private fun AlbumList(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detail") },
+                title = { Text(stringResource(R.string.albums)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, null)
@@ -76,7 +79,7 @@ private fun AlbumList(
                     IconButton(onClick = { showSortSheet = true }) {
                         Icon(
                             Icons.Default.Menu,
-                            contentDescription = "Filter"
+                            contentDescription = stringResource(R.string.filter)
                         )
                     }
                 }
@@ -95,18 +98,9 @@ private fun AlbumList(
                 ) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-            state.error?.let {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(
-                        "Error",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
+            state.error?.let { ErrorState(error = it) }
             Text(
-                "Albums (Sorted by: ${state.selectedSort})",
+                stringResource(R.string.albums_sorted_by, state.selectedSort),
                 modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold

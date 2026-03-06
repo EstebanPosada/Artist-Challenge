@@ -2,7 +2,9 @@ package com.estebanposada.artischallenge.ui.detail
 
 import androidx.lifecycle.SavedStateHandle
 import com.estebanposada.artischallenge.ui.artist
+import com.estebanposada.artischallenge.ui.common.UiError
 import com.estebanposada.artischallenge.ui.detail.ArtistDetailViewModel.Companion.ARTIST_ID
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.usecase.GetArtistDetailUseCase
 import io.mockk.coEvery
@@ -40,9 +42,8 @@ class ArtistDetailViewModelTest {
     @Test
     fun `when loadArtistDetail is called, then getArtistDetailUseCase fails`() = runTest {
         val id = artist.id
-        val errorMsg = "error"
 
-        coEvery { getArtistDetailUseCase(id) } returns Resource.Error(Throwable(errorMsg))
+        coEvery { getArtistDetailUseCase(id) } returns Resource.Error(Error.Unknown)
         viewModel = ArtistDetailViewModel(getArtistDetailUseCase, savedStatHandle)
 
         testDispatcher.scheduler.advanceUntilIdle()
@@ -50,7 +51,7 @@ class ArtistDetailViewModelTest {
         val state = viewModel.state.value
         assertEquals(false, state.isLoading)
         assertEquals(null, state.artist)
-        assertEquals(errorMsg, state.error)
+        assertEquals(UiError.Unknown, state.error)
     }
 
     @Test

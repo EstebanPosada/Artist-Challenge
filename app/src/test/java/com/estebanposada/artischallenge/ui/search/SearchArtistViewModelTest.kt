@@ -1,6 +1,8 @@
 package com.estebanposada.artischallenge.ui.search
 
 import com.estebanposada.artischallenge.ui.artist
+import com.estebanposada.artischallenge.ui.common.UiError
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.usecase.SearchArtistsUseCase
 import io.mockk.coEvery
@@ -39,16 +41,15 @@ class SearchArtistViewModelTest {
     fun `when onSearch is called, then searchArtistsUseCase fails`() = runTest {
         val query = "q"
         val page = 1
-        val errorMsg = "Error"
 
-        coEvery { searchArtistsUseCase(query, page) } returns Resource.Error(Throwable(errorMsg))
+        coEvery { searchArtistsUseCase(query, page) } returns Resource.Error(Error.Unauthorized)
 
         viewModel.onSearch(query)
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = viewModel.state.value
         assertEquals(false, state.isLoading)
-        assertEquals(errorMsg, state.error)
+        assertEquals(UiError.Unauthorized, state.error)
     }
 
     @Test
@@ -72,10 +73,9 @@ class SearchArtistViewModelTest {
     fun `when onLoadNextPage is called, then searchArtistsUseCase fails`() = runTest {
         val query = "q"
         val firstPage = listOf(artist)
-        val errorMsg = "error"
 
         coEvery { searchArtistsUseCase(query, 1) } returns Resource.Success(firstPage)
-        coEvery { searchArtistsUseCase(query, 2) } returns Resource.Error(Throwable(errorMsg))
+        coEvery { searchArtistsUseCase(query, 2) } returns Resource.Error(Error.Unauthorized)
 
         viewModel.onSearch(query)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -89,7 +89,7 @@ class SearchArtistViewModelTest {
         assertEquals(false, state.isLoading)
         assertEquals(false, state.isLoadingMore)
         assertEquals(true, state.canLoadMore)
-        assertEquals(errorMsg, state.error)
+        assertEquals(UiError.Unauthorized, state.error)
     }
 
     @Test

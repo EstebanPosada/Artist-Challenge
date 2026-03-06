@@ -15,10 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.estebanposada.artischallenge.R
 import com.estebanposada.artischallenge.ui.detail.ArtistDetailState
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Artist
 
 @Composable
@@ -35,14 +38,19 @@ fun ArtistDetailContent(
             item { ArtistHeader(artist = artist) }
         }
 
-        item {
-            Button(
-                onClick = onViewAlbums,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-            ) {
-                Text("View Albums", style = MaterialTheme.typography.bodyLarge)
+        if (!state.isLoading) {
+            item {
+                Button(
+                    onClick = onViewAlbums,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                ) {
+                    Text(
+                        stringResource(R.string.view_albums),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
 
@@ -54,7 +62,7 @@ fun ArtistDetailContent(
                     elevation = CardDefaults.cardElevation(8.dp),
                 ) {
                     Text(
-                        "Band Members",
+                        stringResource(R.string.band_members),
                         modifier = Modifier.padding(4.dp),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold
@@ -86,5 +94,7 @@ private fun ArtistDetailContentPreview() {
         members = listOf("Member 1", "Member 2")
     )
     val state = ArtistDetailState(artist = artist)
-    ArtistDetailContent(state = state) {}
+    ArtisChallengeTheme {
+        ArtistDetailContent(state = state) {}
+    }
 }

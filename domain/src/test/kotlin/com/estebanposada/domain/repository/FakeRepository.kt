@@ -1,14 +1,15 @@
 package com.estebanposada.domain.repository
 
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.model.Album
 import com.estebanposada.domain.model.Artist
 
 class FakeRepository : ArtistRepository {
-    var album: Resource<Album> = Resource.Error()
-    var albumList: Resource<List<Album>> = Resource.Error()
-    var artist: Resource<Artist> = Resource.Error()
-    var artistList: Resource<List<Artist>> = Resource.Error()
+    var album: Resource<Album> = Resource.Error(Error.Unknown)
+    var albumList: Resource<List<Album>> = Resource.Error(Error.Unknown)
+    var artist: Resource<Artist> = Resource.Error(Error.Unknown)
+    var artistList: Resource<List<Artist>> = Resource.Error(Error.Unknown)
 
     override suspend fun getArtistDetailById(id: String): Resource<Artist> = artist
 

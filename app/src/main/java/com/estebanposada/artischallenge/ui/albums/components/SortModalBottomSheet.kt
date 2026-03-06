@@ -12,8 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,22 +32,22 @@ fun SortModalBottomSheet(
             modifier = modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text("Filter", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.filter), style = MaterialTheme.typography.titleMedium)
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 FilterChip(
                     selected = selectedSort == AlbumSortType.YEAR,
                     onClick = { onSort(AlbumSortType.YEAR) },
-                    label = { Text("Year") })
+                    label = { Text(stringResource(R.string.filter_year)) })
                 FilterChip(
                     selected = selectedSort == AlbumSortType.GENRE,
                     onClick = { onSort(AlbumSortType.GENRE) },
-                    label = { Text("Genre") })
+                    label = { Text(stringResource(R.string.filter_genre)) })
                 FilterChip(
                     selected = selectedSort == AlbumSortType.LABEL,
                     onClick = { onSort(AlbumSortType.LABEL) },
-                    label = { Text("Label") })
+                    label = { Text(stringResource(R.string.filter_label)) })
             }
         }
     }
@@ -53,5 +56,7 @@ fun SortModalBottomSheet(
 @Preview
 @Composable
 private fun SortModalBottomSheetPreview() {
-    SortModalBottomSheet(onSort = {}, selectedSort = AlbumSortType.GENRE) {}
+    ArtisChallengeTheme {
+        SortModalBottomSheet(onSort = {}, selectedSort = AlbumSortType.GENRE) {}
+    }
 }

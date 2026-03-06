@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import kotlinx.coroutines.flow.debounce
 
 @Composable
@@ -30,7 +31,7 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit,
 ) {
-    var q by remember() { mutableStateOf("") }
+    var q by remember { mutableStateOf("") }
     LaunchedEffect(q) {
         snapshotFlow { q }.debounce(500).collect { debounce ->
             if (debounce.isNotBlank()) {
@@ -66,5 +67,7 @@ fun SearchBar(
 @Preview
 @Composable
 private fun SearchBarPreview() {
-    SearchBar(onQueryChange = {})
+    ArtisChallengeTheme {
+        SearchBar(onQueryChange = {})
+    }
 }

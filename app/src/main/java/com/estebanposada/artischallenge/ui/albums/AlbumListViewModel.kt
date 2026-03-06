@@ -6,12 +6,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.estebanposada.artischallenge.ui.albums.components.AlbumSortType
+import com.estebanposada.artischallenge.ui.common.onFailure
+import com.estebanposada.artischallenge.ui.common.onSuccess
+import com.estebanposada.artischallenge.ui.common.toUiError
 import com.estebanposada.artischallenge.ui.detail.ArtistDetailViewModel.Companion.ARTIST_ID
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.model.Album
 import com.estebanposada.domain.usecase.GetAlbumInfoUseCase
 import com.estebanposada.domain.usecase.SearchAlbumUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,20 +42,18 @@ class AlbumListViewModel @Inject constructor(
             currentPage = 1
             viewModelScope.launch {
                 _state.value = _state.value.copy(isLoading = true, error = null)
-                when (val result = searchAlbumUseCase(id, currentPage)) {
-                    is Resource.Success -> {
-                        val albums = result.data.sortedByDescending { it.year ?: 0 }
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            albums = albums,
-                            filteredAlbums = albums
-                        )
-                        getAlbumInfo(albums)
-                    }
-
-                    is Resource.Error -> _state.value = _state.value.copy(
+                searchAlbumUseCase(id, currentPage).onSuccess { result ->
+                    val albums = result.sortedByDescending { it.year ?: 0 }
+                    _state.value = _state.value.copy(
                         isLoading = false,
-                        error = result.cause?.message ?: "Error"
+                        albums = albums,
+                        filteredAlbums = albums
+                    )
+                    getAlbumInfo(albums)
+                }.onFailure { error ->
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = error.toUiError()
                     )
                 }
             }
@@ -60,16 +62,19 @@ class AlbumListViewModel @Inject constructor(
 
     private fun getAlbumInfo(albums: List<Album>) {
         viewModelScope.launch {
-            val updatedAlbums = albums.map { album ->
-                when (val result = getAlbumInfoUseCase(album.id)) {
-                    is Resource.Error -> album
-                    is Resource.Success -> {
-                        val info = result.data
-                        album.copy(genres = info.genres, labels = info.labels)
+            async {
+                val updatedAlbums = albums.map { album ->
+                    when (val result = getAlbumInfoUseCase(album.id)) {
+                        is Resource.Error -> album
+                        is Resource.Success -> {
+                            val info = result.data
+                            album.copy(genres = info.genres, labels = info.labels)
+                        }
                     }
                 }
+                _state.value =
+                    _state.value.copy(albums = updatedAlbums, filteredAlbums = updatedAlbums)
             }
-            _state.value = _state.value.copy(albums = updatedAlbums, filteredAlbums = updatedAlbums)
         }
     }
 
@@ -82,20 +87,21 @@ class AlbumListViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoadingMore = true, error = null)
             currentPage++
-            when (val result = searchAlbumUseCase(currentArtistId, currentPage)) {
-                is Resource.Success -> {
-                    val albums = _state.value.albums + result.data
-                    val sorted = albums.sortedByDescending { it.year ?: 0 }
-                    _state.value = _state.value.copy(
-                        albums = sorted,
-                        filteredAlbums = sorted,
-                        isLoadingMore = false,
-                        canLoadMore = result.data.isNotEmpty()
-                    )
-                }
-
-                is Resource.Error -> _state.value =
-                    _state.value.copy(isLoadingMore = false, isLoading = false)
+            searchAlbumUseCase(currentArtistId, currentPage).onSuccess { result ->
+                val albums = _state.value.albums + result
+                val sorted = albums.sortedByDescending { it.year ?: 0 }
+                _state.value = _state.value.copy(
+                    albums = sorted,
+                    filteredAlbums = sorted,
+                    isLoadingMore = false,
+                    canLoadMore = result.isNotEmpty()
+                )
+            }.onFailure { error ->
+                _state.value = _state.value.copy(
+                    isLoadingMore = false,
+                    isLoading = false,
+                    error = error.toUiError()
+                )
             }
         }
     }

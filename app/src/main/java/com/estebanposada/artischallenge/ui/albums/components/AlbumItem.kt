@@ -9,8 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Album
 
 @Composable
@@ -23,18 +26,27 @@ fun AlbumItem(modifier: Modifier = Modifier, album: Album) {
                 color = MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(4.dp)
+            .padding(8.dp)
     ) {
         Text(text = album.title, style = MaterialTheme.typography.titleMedium)
-        album.year?.let { Text(text = "Year: $it", style = MaterialTheme.typography.bodySmall) }
-        if (album.genres.isNotEmpty()) Text(
-            text = "Genres: ${album.genres.joinToString(",")}",
-            style = MaterialTheme.typography.bodySmall
-        )
-        if (album.labels.isNotEmpty()) Text(
-            text = "Labels: ${album.labels.joinToString("/")}",
-            style = MaterialTheme.typography.bodySmall
-        )
+        album.year?.let {
+            Text(
+                text = stringResource(R.string.year_value, it),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        album.genres.takeIf { it.isNotEmpty() }?.joinToString(", ")?.let {
+            Text(
+                text = stringResource(R.string.genres_value, album.genres.joinToString(",")),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        album.labels.takeIf { it.isNotEmpty() }?.joinToString("/")?.let {
+            Text(
+                text = stringResource(R.string.labels_value, album.labels.joinToString("/")),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
 }
 
@@ -48,5 +60,7 @@ private fun AlbumItemPreview() {
         genres = listOf("Rock, Pop"),
         labels = listOf("label1", "label2")
     )
-    AlbumItem(album = album)
+    ArtisChallengeTheme {
+        AlbumItem(album = album)
+    }
 }

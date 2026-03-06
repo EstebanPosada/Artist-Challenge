@@ -15,8 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 
 @Composable
 fun EmptySearchState(modifier: Modifier = Modifier) {
@@ -33,11 +36,11 @@ fun EmptySearchState(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Search for an artist",
+            text = stringResource(R.string.search_for_artist),
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = "Start typing to explore artists",
+            text = stringResource(R.string.start_typing),
             color = Color.Gray
         )
     }
@@ -46,5 +49,7 @@ fun EmptySearchState(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun EmptySearchStatePreview() {
-    EmptySearchState()
+    ArtisChallengeTheme {
+        EmptySearchState()
+    }
 }

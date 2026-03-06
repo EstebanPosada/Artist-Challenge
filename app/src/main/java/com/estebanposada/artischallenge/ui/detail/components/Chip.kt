@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 
 @Composable
 fun Chip(modifier: Modifier = Modifier, name: String) {
@@ -31,5 +32,7 @@ fun Chip(modifier: Modifier = Modifier, name: String) {
 @Preview
 @Composable
 private fun ChipPreview() {
-    Chip(name = "Test")
+    ArtisChallengeTheme {
+        Chip(name = "Test")
+    }
 }

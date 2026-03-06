@@ -1,5 +1,6 @@
 package com.estebanposada.domain.usecase
 
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.model.Artist
 import com.estebanposada.domain.repository.FakeRepository
@@ -21,7 +22,7 @@ class GetArtistDetailUseCaseTest {
     @Test
     fun `when getArtistDetailUseCase is called and repo returns error`() = runTest {
         val id = "id"
-        val error = RuntimeException("network error")
+        val error = Error.Unknown
 
         repository.artist = Resource.Error(error)
         val result = getArtistDetailUseCase(id)

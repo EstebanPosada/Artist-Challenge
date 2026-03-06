@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.estebanposada.artischallenge.ui.album
 import com.estebanposada.artischallenge.ui.albums.components.AlbumSortType
 import com.estebanposada.artischallenge.ui.artist
+import com.estebanposada.artischallenge.ui.common.UiError
 import com.estebanposada.artischallenge.ui.detail.ArtistDetailViewModel.Companion.ARTIST_ID
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.model.Album
 import com.estebanposada.domain.usecase.GetAlbumInfoUseCase
@@ -46,25 +48,23 @@ class AlbumListViewModelTest {
     @Test
     fun `when getAlbumsById is called, then searchAlbumUseCase fails`() = runTest {
         val page = 1
-        val errorMsg = "error"
 
-        coEvery { searchAlbumUseCase(artist.id, page) } returns Resource.Error(Throwable(errorMsg))
+        coEvery { searchAlbumUseCase(artist.id, page) } returns Resource.Error(Error.Unknown)
         viewModel = AlbumListViewModel(savedStatHandle, searchAlbumUseCase, getAlbumInfoUseCase)
 
         testDispatcher.scheduler.advanceUntilIdle()
 
         val state = viewModel.state.value
         assertEquals(false, state.isLoading)
-        assertEquals(errorMsg, state.error)
+        assertEquals(UiError.Unknown, state.error)
     }
 
     @Test
     fun `when getAlbumsById is called, then searchAlbumUseCase returns success but getAlbumInfoUseCase fails`() =
         runTest {
-            val errorMsg = "error"
 
             coEvery { searchAlbumUseCase(artist.id, 1) } returns Resource.Success(listOf(album))
-            coEvery { getAlbumInfoUseCase(album.id) } returns Resource.Error(Throwable(errorMsg))
+            coEvery { getAlbumInfoUseCase(album.id) } returns Resource.Error(Error.Unauthorized)
             viewModel = AlbumListViewModel(savedStatHandle, searchAlbumUseCase, getAlbumInfoUseCase)
 
             testDispatcher.scheduler.advanceUntilIdle()
@@ -95,10 +95,9 @@ class AlbumListViewModelTest {
     @Test
     fun `when onLoadMore is called, then searchAlbumUseCase fails`() = runTest {
         val firstPage = listOf(album)
-        val errorMsg = "error"
 
         coEvery { searchAlbumUseCase(artist.id, 1) } returns Resource.Success(firstPage)
-        coEvery { searchAlbumUseCase(artist.id, 2) } returns Resource.Error(Throwable(errorMsg))
+        coEvery { searchAlbumUseCase(artist.id, 2) } returns Resource.Error(Error.Unauthorized)
         coEvery { getAlbumInfoUseCase(album.id) } returns Resource.Success(album)
         viewModel = AlbumListViewModel(savedStatHandle, searchAlbumUseCase, getAlbumInfoUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -112,7 +111,7 @@ class AlbumListViewModelTest {
         assertEquals(true, state.canLoadMore)
         assertEquals(firstPage, state.albums)
         assertEquals(firstPage, state.filteredAlbums)
-        assertEquals(null, state.error)
+        assertEquals(UiError.Unauthorized, state.error)
     }
 
     @Test

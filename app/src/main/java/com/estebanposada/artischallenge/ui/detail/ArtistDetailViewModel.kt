@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.estebanposada.domain.Resource
+import com.estebanposada.artischallenge.ui.common.onFailure
+import com.estebanposada.artischallenge.ui.common.onSuccess
+import com.estebanposada.artischallenge.ui.common.toUiError
 import com.estebanposada.domain.usecase.GetArtistDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,15 +35,11 @@ class ArtistDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
 
-            when (val result = getArtistDetailUseCase(id = id)) {
-                is Resource.Success -> _state.value =
-                    _state.value.copy(isLoading = false, artist = result.data)
-
-                is Resource.Error -> _state.value =
-                    _state.value.copy(
-                        isLoading = false,
-                        error = result.cause?.message ?: "Unknown error"
-                    )
+            getArtistDetailUseCase(id = id).onSuccess { artist ->
+                _state.value = _state.value.copy(isLoading = false, artist = artist)
+            }.onFailure { error ->
+                _state.value =
+                    _state.value.copy(isLoading = false, error = error.toUiError())
             }
         }
     }

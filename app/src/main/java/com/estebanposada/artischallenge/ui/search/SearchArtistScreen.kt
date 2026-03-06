@@ -9,15 +9,15 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.estebanposada.artischallenge.ui.common.ErrorState
+import com.estebanposada.artischallenge.ui.common.UiError
 import com.estebanposada.artischallenge.ui.search.components.ArtistItem
 import com.estebanposada.artischallenge.ui.search.components.EmptySearchState
 import com.estebanposada.artischallenge.ui.search.components.SearchBar
@@ -100,18 +100,8 @@ private fun SearchArtist(
                 ) {
                     CircularProgressIndicator()
                 }
-            state.error?.let {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Something went wrong",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+
+            state.error?.let { error -> ErrorState(error = error) }
         }
     }
 }
@@ -151,7 +141,7 @@ private fun SearchArtistPreviewLoading() {
 @Preview
 @Composable
 private fun SearchArtistPreviewError() {
-    val state = SearchArtistState(error = "error")
+    val state = SearchArtistState(error = UiError.Network)
     ArtisChallengeTheme {
         SearchArtist(state, {}, {}) {}
     }

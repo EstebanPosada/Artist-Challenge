@@ -1,5 +1,6 @@
 package com.estebanposada.domain.usecase
 
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import com.estebanposada.domain.model.Album
 import com.estebanposada.domain.repository.FakeRepository
@@ -21,7 +22,7 @@ class GetAlbumInfoUseCaseTest {
     @Test
     fun `when getAlbumInfoUseCase is called and repo returns error`() = runTest {
         val id = "id"
-        val error = RuntimeException("network error")
+        val error = Error.Unknown
 
         repository.album = Resource.Error(error)
         val result = getAlbumInfoUseCase(id)

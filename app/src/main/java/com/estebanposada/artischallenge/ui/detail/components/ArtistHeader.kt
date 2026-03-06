@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import coil3.request.crossfade
 import coil3.request.error
 import coil3.request.placeholder
 import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Artist
 
 @Composable
@@ -40,7 +42,7 @@ fun ArtistHeader(modifier: Modifier = Modifier, artist: Artist) {
         Image(
             painter = painter,
             contentScale = ContentScale.Fit,
-            contentDescription = "Artist: ${artist.id}",
+            contentDescription = stringResource(R.string.artist_value, artist.id),
             modifier = Modifier.clip(RoundedCornerShape(8.dp))
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -69,5 +71,7 @@ private fun ArtistHeaderPreview() {
         name = "Artist",
         profile = "Profile"
     )
-    ArtistHeader(artist = artist)
+    ArtisChallengeTheme {
+        ArtistHeader(artist = artist)
+    }
 }

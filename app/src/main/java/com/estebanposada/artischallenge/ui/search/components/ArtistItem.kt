@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
@@ -30,6 +31,7 @@ import coil3.request.crossfade
 import coil3.request.error
 import coil3.request.placeholder
 import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Artist
 
 @Composable
@@ -54,7 +56,7 @@ fun ArtistItem(artist: Artist, onClick: (String) -> Unit) {
             Image(
                 painter = painter,
                 contentScale = ContentScale.Fit,
-                contentDescription = "Artist: ${artist.id}",
+                contentDescription = stringResource(R.string.artist_value, artist.id),
                 modifier = Modifier
                     .width(60.dp)
                     .aspectRatio(3 / 4f)
@@ -67,7 +69,7 @@ fun ArtistItem(artist: Artist, onClick: (String) -> Unit) {
             )
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "arrow",
+                contentDescription = stringResource(R.string.arrow),
                 modifier = Modifier.size(36.dp)
             )
         }
@@ -81,5 +83,7 @@ private fun ArtistItemPreview() {
         id = "id", name = "name", thumbnail = "url",
         members = emptyList()
     )
-    ArtistItem(artist) {}
+    ArtisChallengeTheme {
+        ArtistItem(artist) {}
+    }
 }

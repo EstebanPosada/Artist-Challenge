@@ -5,13 +5,16 @@ import com.estebanposada.data.remote.api.SearchArtistResponse
 import com.estebanposada.data.remote.api.toAlbum
 import com.estebanposada.data.remote.api.toArtist
 import com.estebanposada.data.remote.api.toArtistDetail
+import com.estebanposada.domain.Error
 import com.estebanposada.domain.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
+import retrofit2.HttpException
 
 class ArtistRepositoryImplTest {
     private lateinit var repository: ArtistRepositoryImpl
@@ -24,19 +27,14 @@ class ArtistRepositoryImplTest {
     }
 
     @Test
-    fun `when searchArtists is called, then api throws error`() = runTest {
+    fun `when searchArtists is called, then api throws unknown error`() = runTest {
         val query = "q"
         val page = 1
 
-        coEvery { api.searchArtists(query = query, page = page) } throws RuntimeException("error")
-        when (val result = repository.searchArtists(query, page)) {
-            is Resource.Error -> {
-                assert(result.cause is RuntimeException)
-                assertEquals("error", result.cause?.message)
-            }
-
-            else -> error("Error")
-        }
+        coEvery { api.searchArtists(query = query, page = page) } throws RuntimeException()
+        val result = repository.searchArtists(query, page)
+        assert(result is Resource.Error)
+        assertEquals(Error.Unknown, (result as Resource.Error).error)
     }
 
     @Test
@@ -58,19 +56,15 @@ class ArtistRepositoryImplTest {
     }
 
     @Test
-    fun `when getAlbumsByArtistId is called, then api throws error`() = runTest {
+    fun `when getAlbumsByArtistId is called, then api throws 404 error`() = runTest {
         val id = "id"
         val page = 1
 
-        coEvery { api.getAlbums(id = id, page = page) } throws RuntimeException("error")
-        when (val result = repository.getAlbumsByArtistId(id, page)) {
-            is Resource.Error -> {
-                assert(result.cause is RuntimeException)
-                assertEquals("error", result.cause?.message)
-            }
+        coEvery { api.getAlbums(id = id, page = page) } throws httpException(404)
+        val result = repository.getAlbumsByArtistId(id, page)
 
-            else -> error("Error")
-        }
+        assert(result is Resource.Error)
+        assertEquals(Error.NotFound, (result as Resource.Error).error)
     }
 
     @Test
@@ -90,18 +84,14 @@ class ArtistRepositoryImplTest {
     }
 
     @Test
-    fun `when getArtistDetailById is called, then api throws error`() = runTest {
+    fun `when getArtistDetailById is called, then api throws 401 error`() = runTest {
         val id = "id"
 
-        coEvery { api.getArtistById(id) } throws RuntimeException("error")
-        when (val result = repository.getArtistDetailById(id)) {
-            is Resource.Error -> {
-                assert(result.cause is RuntimeException)
-                assertEquals("error", result.cause?.message)
-            }
+        coEvery { api.getArtistById(id) } throws httpException(401)
+        val result = repository.getArtistDetailById(id)
 
-            else -> error("Error")
-        }
+        assert(result is Resource.Error)
+        assertEquals(Error.Unauthorized, (result as Resource.Error).error)
     }
 
     @Test
@@ -120,18 +110,14 @@ class ArtistRepositoryImplTest {
     }
 
     @Test
-    fun `when getAlbumInfo is called, then api throws error`() = runTest {
+    fun `when getAlbumInfo is called, then api throws 429 error`() = runTest {
         val id = "id"
 
-        coEvery { api.getAlbumInfo(id) } throws RuntimeException("error")
-        when (val result = repository.getAlbumInfo(id)) {
-            is Resource.Error -> {
-                assert(result.cause is RuntimeException)
-                assertEquals("error", result.cause?.message)
-            }
+        coEvery { api.getAlbumInfo(id) } throws httpException(429)
+        val result = repository.getAlbumInfo(id)
 
-            else -> error("Error")
-        }
+        assert(result is Resource.Error)
+        assertEquals(Error.RequestLimit, (result as Resource.Error).error)
     }
 
     @Test
@@ -147,5 +133,10 @@ class ArtistRepositoryImplTest {
 
             else -> error("Error")
         }
+    }
+
+    fun httpException(code: Int): HttpException {
+        val response = retrofit2.Response.error<Any>(code, "".toResponseBody())
+        return HttpException(response)
     }
 }

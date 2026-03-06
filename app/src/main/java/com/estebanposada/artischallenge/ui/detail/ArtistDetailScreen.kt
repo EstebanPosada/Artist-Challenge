@@ -9,15 +9,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.estebanposada.artischallenge.R
+import com.estebanposada.artischallenge.ui.common.ErrorState
 import com.estebanposada.artischallenge.ui.detail.components.ArtistDetailContent
 import com.estebanposada.artischallenge.ui.theme.ArtisChallengeTheme
 import com.estebanposada.domain.model.Artist
@@ -42,7 +44,7 @@ private fun ArtistDetail(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detail") },
+                title = { Text(stringResource(R.string.detail)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, null)
@@ -58,16 +60,7 @@ private fun ArtistDetail(
             ) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-        state.error?.let {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    "Error",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
+        state.error?.let { ErrorState(error = it) }
     }
 }
 
